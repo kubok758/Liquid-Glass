@@ -1,41 +1,700 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Liquid Glass Antistress Demo</title>
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Liquid Glass iOS 26</title>
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    :root {
+      --glass-bg: rgba(255, 255, 255, 0.18);
+      --glass-bg-strong: rgba(255, 255, 255, 0.28);
+      --glass-border: rgba(255, 255, 255, 0.42);
+      --text-main: rgba(255, 255, 255, 0.96);
+      --text-soft: rgba(255, 255, 255, 0.72);
+      --shadow: 0 30px 80px rgba(0, 0, 0, 0.32);
+    }
+
+    body {
+      min-height: 100vh;
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", sans-serif;
+      color: var(--text-main);
+      overflow-x: hidden;
+      background:
+        radial-gradient(circle at 15% 10%, rgba(0, 225, 255, 0.75), transparent 32%),
+        radial-gradient(circle at 85% 15%, rgba(140, 95, 255, 0.75), transparent 35%),
+        radial-gradient(circle at 60% 85%, rgba(255, 90, 170, 0.62), transparent 35%),
+        linear-gradient(135deg, #071229, #0a5d8f 45%, #10173d);
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background:
+        linear-gradient(120deg, rgba(255,255,255,0.16), transparent 35%, rgba(255,255,255,0.08)),
+        url("data:image/svg+xml,%3Csvg viewBox='0 0 300 300' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='0.18'/%3E%3C/svg%3E");
+      mix-blend-mode: overlay;
+      opacity: 0.55;
+      z-index: -1;
+    }
+
+    .blob {
+      position: fixed;
+      width: 420px;
+      height: 420px;
+      border-radius: 50%;
+      filter: blur(35px);
+      opacity: 0.55;
+      z-index: -2;
+      animation: float 9s ease-in-out infinite alternate;
+    }
+
+    .blob.one {
+      left: -120px;
+      top: 80px;
+      background: #00eaff;
+    }
+
+    .blob.two {
+      right: -100px;
+      bottom: 80px;
+      background: #ff4fc3;
+      animation-delay: -3s;
+    }
+
+    .blob.three {
+      left: 45%;
+      top: 45%;
+      background: #7c5cff;
+      animation-delay: -6s;
+    }
+
+    @keyframes float {
+      from {
+        transform: translate3d(0, 0, 0) scale(1);
+      }
+      to {
+        transform: translate3d(40px, -55px, 0) scale(1.12);
+      }
+    }
+
+    .page {
+      width: min(1180px, calc(100% - 32px));
+      margin: 0 auto;
+      padding: 28px 0 44px;
+    }
+
+    .nav {
+      height: 72px;
+      padding: 10px 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.16);
+      border: 1px solid rgba(255, 255, 255, 0.34);
+      backdrop-filter: blur(34px) saturate(180%);
+      -webkit-backdrop-filter: blur(34px) saturate(180%);
+      box-shadow: var(--shadow), inset 0 1px 1px rgba(255,255,255,0.55);
+      position: sticky;
+      top: 18px;
+      z-index: 10;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-weight: 800;
+      letter-spacing: -0.04em;
+      font-size: 22px;
+      padding-left: 10px;
+    }
+
+    .logo-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 15px;
+      display: grid;
+      place-items: center;
+      background:
+        linear-gradient(145deg, rgba(255,255,255,0.85), rgba(255,255,255,0.18)),
+        linear-gradient(135deg, #52e7ff, #a77dff);
+      color: #0b2548;
+      box-shadow:
+        inset 0 1px 1px rgba(255,255,255,0.9),
+        0 12px 30px rgba(0,0,0,0.22);
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .nav-links a {
+      color: rgba(255,255,255,0.82);
+      text-decoration: none;
+      padding: 12px 16px;
+      border-radius: 999px;
+      font-size: 15px;
+      transition: 0.25s ease;
+    }
+
+    .nav-links a:hover {
+      background: rgba(255,255,255,0.18);
+      color: white;
+    }
+
+    .nav-btn {
+      border: 0;
+      color: white;
+      font-weight: 700;
+      padding: 13px 18px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.22);
+      box-shadow: inset 0 1px 1px rgba(255,255,255,0.55);
+      cursor: pointer;
+      backdrop-filter: blur(20px);
+      transition: 0.25s ease;
+    }
+
+    .nav-btn:hover {
+      transform: translateY(-2px);
+      background: rgba(255,255,255,0.32);
+    }
+
+    .hero {
+      display: grid;
+      grid-template-columns: 1.05fr 0.95fr;
+      gap: 34px;
+      align-items: center;
+      padding: 74px 0 42px;
+    }
+
+    .badge {
+      width: fit-content;
+      padding: 10px 15px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.16);
+      border: 1px solid rgba(255, 255, 255, 0.34);
+      backdrop-filter: blur(20px) saturate(180%);
+      box-shadow: inset 0 1px 1px rgba(255,255,255,0.4);
+      color: rgba(255,255,255,0.86);
+      font-size: 14px;
+      margin-bottom: 20px;
+    }
+
+    h1 {
+      font-size: clamp(52px, 8vw, 108px);
+      line-height: 0.9;
+      letter-spacing: -0.08em;
+      margin-bottom: 24px;
+      text-shadow: 0 18px 50px rgba(0,0,0,0.22);
+    }
+
+    .gradient-text {
+      background: linear-gradient(120deg, #ffffff, #bff6ff, #ffb9f0);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .hero p {
+      max-width: 590px;
+      font-size: 20px;
+      line-height: 1.55;
+      color: var(--text-soft);
+      margin-bottom: 28px;
+    }
+
+    .actions {
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      border: 0;
+      cursor: pointer;
+      border-radius: 999px;
+      padding: 16px 22px;
+      font-weight: 800;
+      font-size: 16px;
+      color: white;
+      transition: 0.25s ease;
+    }
+
+    .btn.primary {
+      background:
+        linear-gradient(145deg, rgba(255,255,255,0.34), rgba(255,255,255,0.12)),
+        linear-gradient(135deg, #0fdcff, #8764ff);
+      box-shadow:
+        0 20px 50px rgba(20, 140, 255, 0.38),
+        inset 0 1px 1px rgba(255,255,255,0.65);
+    }
+
+    .btn.secondary {
+      background: rgba(255,255,255,0.16);
+      border: 1px solid rgba(255,255,255,0.32);
+      backdrop-filter: blur(20px);
+    }
+
+    .btn:hover {
+      transform: translateY(-3px) scale(1.02);
+    }
+
+    .phone-wrap {
+      position: relative;
+      display: grid;
+      place-items: center;
+    }
+
+    .phone {
+      width: min(360px, 88vw);
+      aspect-ratio: 9 / 19.5;
+      border-radius: 52px;
+      padding: 12px;
+      background:
+        linear-gradient(145deg, rgba(255,255,255,0.8), rgba(255,255,255,0.18)),
+        linear-gradient(135deg, #0f162e, #424e75);
+      box-shadow:
+        0 35px 90px rgba(0,0,0,0.45),
+        inset 0 1px 1px rgba(255,255,255,0.72);
+    }
+
+    .screen {
+      height: 100%;
+      border-radius: 42px;
+      overflow: hidden;
+      padding: 18px;
+      position: relative;
+      background:
+        radial-gradient(circle at 30% 20%, rgba(255,255,255,0.45), transparent 25%),
+        radial-gradient(circle at 60% 65%, rgba(0,220,255,0.72), transparent 40%),
+        radial-gradient(circle at 75% 20%, rgba(120,95,255,0.8), transparent 38%),
+        linear-gradient(160deg, #09152d, #0e76a2 55%, #15163c);
+    }
+
+    .island {
+      position: absolute;
+      top: 15px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 112px;
+      height: 34px;
+      border-radius: 999px;
+      background: rgba(0,0,0,0.82);
+      z-index: 3;
+    }
+
+    .status {
+      display: flex;
+      justify-content: space-between;
+      font-weight: 700;
+      font-size: 14px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .time-big {
+      margin-top: 72px;
+      text-align: center;
+      font-size: 78px;
+      font-weight: 800;
+      letter-spacing: -0.08em;
+      text-shadow: 0 18px 40px rgba(0,0,0,0.28);
+    }
+
+    .date {
+      text-align: center;
+      color: rgba(255,255,255,0.76);
+      margin-top: -4px;
+      font-weight: 600;
+    }
+
+    .glass {
+      position: relative;
+      background: var(--glass-bg);
+      border: 1px solid var(--glass-border);
+      backdrop-filter: blur(34px) saturate(190%);
+      -webkit-backdrop-filter: blur(34px) saturate(190%);
+      box-shadow:
+        0 22px 60px rgba(0,0,0,0.22),
+        inset 0 1px 1px rgba(255,255,255,0.6),
+        inset 0 -1px 1px rgba(255,255,255,0.12);
+      overflow: hidden;
+    }
+
+    .glass::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(130deg, rgba(255,255,255,0.48), transparent 24%, transparent 60%, rgba(255,255,255,0.16)),
+        radial-gradient(circle at 20% 0%, rgba(255,255,255,0.34), transparent 38%);
+      pointer-events: none;
+      opacity: 0.75;
+    }
+
+    .widget {
+      border-radius: 28px;
+      padding: 18px;
+      margin-top: 22px;
+    }
+
+    .widget h3 {
+      font-size: 17px;
+      margin-bottom: 12px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .widget p,
+    .widget div {
+      position: relative;
+      z-index: 1;
+    }
+
+    .apps {
+      position: absolute;
+      left: 18px;
+      right: 18px;
+      bottom: 18px;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      z-index: 2;
+    }
+
+    .app {
+      aspect-ratio: 1;
+      border-radius: 20px;
+      display: grid;
+      place-items: center;
+      font-size: 25px;
+      background: rgba(255,255,255,0.22);
+      border: 1px solid rgba(255,255,255,0.34);
+      backdrop-filter: blur(22px);
+      box-shadow: inset 0 1px 1px rgba(255,255,255,0.45);
+      transition: 0.25s ease;
+    }
+
+    .app:hover {
+      transform: translateY(-5px) scale(1.05);
+    }
+
+    .floating-card {
+      position: absolute;
+      width: 210px;
+      border-radius: 30px;
+      padding: 18px;
+      animation: hoverCard 4s ease-in-out infinite alternate;
+    }
+
+    .floating-card.one {
+      left: -40px;
+      top: 75px;
+    }
+
+    .floating-card.two {
+      right: -35px;
+      bottom: 95px;
+      animation-delay: -2s;
+    }
+
+    @keyframes hoverCard {
+      from {
+        transform: translateY(0) rotate(-2deg);
+      }
+      to {
+        transform: translateY(-18px) rotate(2deg);
+      }
+    }
+
+    .features {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+      margin-top: 30px;
+    }
+
+    .feature {
+      border-radius: 34px;
+      padding: 24px;
+      min-height: 220px;
+      transition: 0.28s ease;
+    }
+
+    .feature:hover {
+      transform: translateY(-8px);
+      background: var(--glass-bg-strong);
+    }
+
+    .feature-icon {
+      width: 54px;
+      height: 54px;
+      border-radius: 18px;
+      display: grid;
+      place-items: center;
+      font-size: 26px;
+      margin-bottom: 18px;
+      background: rgba(255,255,255,0.22);
+      box-shadow: inset 0 1px 1px rgba(255,255,255,0.5);
+      position: relative;
+      z-index: 1;
+    }
+
+    .feature h2 {
+      font-size: 24px;
+      letter-spacing: -0.04em;
+      margin-bottom: 10px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .feature p {
+      color: rgba(255,255,255,0.72);
+      line-height: 1.55;
+      position: relative;
+      z-index: 1;
+    }
+
+    .dock {
+      position: fixed;
+      left: 50%;
+      bottom: 20px;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 12px;
+      padding: 12px;
+      border-radius: 30px;
+      background: rgba(255,255,255,0.16);
+      border: 1px solid rgba(255,255,255,0.32);
+      backdrop-filter: blur(34px) saturate(190%);
+      -webkit-backdrop-filter: blur(34px) saturate(190%);
+      box-shadow: 0 20px 60px rgba(0,0,0,0.35), inset 0 1px 1px rgba(255,255,255,0.45);
+      z-index: 20;
+    }
+
+    .dock .dock-app {
+      width: 54px;
+      height: 54px;
+      border-radius: 18px;
+      display: grid;
+      place-items: center;
+      font-size: 24px;
+      background: rgba(255,255,255,0.2);
+      border: 1px solid rgba(255,255,255,0.25);
+      transition: 0.22s ease;
+    }
+
+    .dock .dock-app:hover {
+      transform: translateY(-10px) scale(1.12);
+      background: rgba(255,255,255,0.32);
+    }
+
+    @media (max-width: 900px) {
+      .nav-links {
+        display: none;
+      }
+
+      .hero {
+        grid-template-columns: 1fr;
+        padding-top: 52px;
+      }
+
+      .features {
+        grid-template-columns: 1fr;
+      }
+
+      .floating-card {
+        display: none;
+      }
+
+      .phone {
+        width: min(340px, 92vw);
+      }
+
+      .dock {
+        bottom: 12px;
+      }
+
+      .dock .dock-app {
+        width: 48px;
+        height: 48px;
+      }
+    }
+  </style>
 </head>
+
 <body>
+  <div class="blob one"></div>
+  <div class="blob two"></div>
+  <div class="blob three"></div>
 
-    <div class="app-background">
-        <div class="pattern-grid"></div>
-        <h1>Потяни за стекло</h1>
-    </div>
+  <main class="page">
+    <nav class="nav">
+      <div class="logo">
+        <div class="logo-icon">⌘</div>
+        iOS 26
+      </div>
 
-    <div id="glass-capsule" class="liquid-glass">
+      <div class="nav-links">
+        <a href="#">Дизайн</a>
+        <a href="#">Виджеты</a>
+        <a href="#">Glass UI</a>
+        <a href="#">Анимации</a>
+      </div>
+
+      <button class="nav-btn">Попробовать</button>
+    </nav>
+
+    <section class="hero">
+      <div>
+        <div class="badge">✨ Концепт интерфейса Liquid Glass</div>
+
+        <h1>
+          Liquid<br>
+          <span class="gradient-text">Glass</span>
+        </h1>
+
+        <p>
+          Сайт с эффектом стекла как в iOS 26: прозрачные панели,
+          мягкое размытие, блики, глубина, плавающие карточки и плавные
+          анимации в стиле Apple.
+        </p>
+
+        <div class="actions">
+          <button class="btn primary">Смотреть дизайн</button>
+          <button class="btn secondary">Открыть демо</button>
+        </div>
+      </div>
+
+      <div class="phone-wrap">
+        <div class="floating-card one glass">
+          <h3>Погода</h3>
+          <p style="font-size: 38px; font-weight: 800;">16°</p>
+          <p style="color: rgba(255,255,255,.72);">Сан-Франциско</p>
         </div>
 
-    <svg width="0" height="0" style="position: absolute;">
-        <defs>
-            <filter id="liquid-fx" x="-50%" y="-50%" width="200%" height="200%" color-interpolation-filters="sRGB">
-                
-                <feTurbulence type="fractalNoise" baseFrequency="0.015" numOctaves="3" result="liquidMap" />
+        <div class="floating-card two glass">
+          <h3>Музыка</h3>
+          <p style="font-size: 15px; color: rgba(255,255,255,.74);">Liquid Dreams</p>
+          <div style="height: 6px; border-radius: 99px; background: rgba(255,255,255,.24); margin-top: 16px;">
+            <div style="width: 62%; height: 100%; border-radius: 99px; background: rgba(255,255,255,.82);"></div>
+          </div>
+        </div>
 
-                <feDisplacementMap in="SourceGraphic" in2="liquidMap" scale="40" xChannelSelector="R" yChannelSelector="G" result="refractedBG"/>
+        <div class="phone">
+          <div class="screen">
+            <div class="island"></div>
 
-                <feSpecularLighting in="liquidMap" surfaceScale="10" specularConstant="1.2" specularExponent="30" lighting-color="#ffffff" result="shine">
-                    <fePointLight x="-200" y="-200" z="300"/>
-                </feSpecularLighting>
+            <div class="status">
+              <span>9:41</span>
+              <span>5G 🔋</span>
+            </div>
 
-                <feBlend in="shine" in2="refractedBG" mode="screen" result="finalGlass"/>
-                
-                <feComposite in="finalGlass" in2="SourceAlpha" operator="in" />
-            </filter>
-        </defs>
-    </svg>
+            <div class="time-big">9:41</div>
+            <div class="date">Пятница, 24 апреля</div>
 
-    <script src="script.js"></script>
+            <div class="widget glass">
+              <h3>Сегодня</h3>
+              <p style="color: rgba(255,255,255,.76); line-height: 1.45;">
+                Новый полупрозрачный интерфейс с живыми слоями,
+                светом и глубиной.
+              </p>
+            </div>
+
+            <div class="apps">
+              <div class="app">📞</div>
+              <div class="app">💬</div>
+              <div class="app">🌤️</div>
+              <div class="app">🎵</div>
+              <div class="app">🧭</div>
+              <div class="app">📷</div>
+              <div class="app">🖼️</div>
+              <div class="app">⚙️</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="features">
+      <article class="feature glass">
+        <div class="feature-icon">💎</div>
+        <h2>Стеклянные панели</h2>
+        <p>
+          Карточки используют blur, прозрачность, световые блики и мягкие
+          границы, чтобы выглядеть как настоящий Liquid Glass.
+        </p>
+      </article>
+
+      <article class="feature glass">
+        <div class="feature-icon">🌊</div>
+        <h2>Живая глубина</h2>
+        <p>
+          Фон, размытие, тени и плавающие элементы создают ощущение объёма,
+          будто интерфейс находится над обоями.
+        </p>
+      </article>
+
+      <article class="feature glass">
+        <div class="feature-icon">⚡</div>
+        <h2>Плавные анимации</h2>
+        <p>
+          Кнопки, карточки, док и элементы телефона реагируют мягко,
+          без резких движений, как в современной iOS.
+        </p>
+      </article>
+    </section>
+  </main>
+
+  <div class="dock">
+    <div class="dock-app">🏠</div>
+    <div class="dock-app">🔎</div>
+    <div class="dock-app">💬</div>
+    <div class="dock-app">🎵</div>
+  </div>
+
+  <script>
+    const cards = document.querySelectorAll(".glass");
+
+    document.addEventListener("mousemove", (e) => {
+      const x = e.clientX / window.innerWidth - 0.5;
+      const y = e.clientY / window.innerHeight - 0.5;
+
+      cards.forEach((card, index) => {
+        const power = index % 2 === 0 ? 8 : -8;
+        card.style.transform = `translate3d(${x * power}px, ${y * power}px, 0)`;
+      });
+    });
+
+    document.querySelectorAll(".btn, .dock-app, .app").forEach((el) => {
+      el.addEventListener("click", () => {
+        el.animate(
+          [
+            { transform: "scale(1)" },
+            { transform: "scale(0.92)" },
+            { transform: "scale(1)" }
+          ],
+          {
+            duration: 220,
+            easing: "cubic-bezier(.2,.8,.2,1)"
+          }
+        );
+      });
+    });
+  </script>
 </body>
 </html>
-
